@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ynov campus</title>
+</head>
+<body>
+    <h2>Bachelor 1 </h2>
+    <h2>Filière : Informatique</h2>
+    <h2>Nombre étudiants : 5 </h2>
+        {{range .Users}}
+    <h2>{{.FirstName}}{{.LastName}}</h2>
+        <p>Age : {{.Age}} ans </p>
+        <p>Sexe : {{if eq .Sex "Masculin"}}
+        <img src="path/to/Signe_masculin.png" alt="Masculin"/>
+            {{else if eq .Sex "Feminin"}}
+        <img src="path/to/Signe_feminin.png" alt="Feminin"/>
+{{end}}  
+</p>
+{{end}}
+</body>
+</html>
