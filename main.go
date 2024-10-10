@@ -7,6 +7,8 @@ import (
 	"os"
 )
 
+var Nombredevu int
+
 func main() {
 
 	temp, err := template.ParseGlob("./templates/*.html")
@@ -14,7 +16,6 @@ func main() {
 		fmt.Printf("ERREUR => %s", err.Error())
 		os.Exit(02)
 	}
-	var nombredevu int 
 	type User struct {
 		FirstName string
 		LastName  string
@@ -36,11 +37,19 @@ func main() {
 		temp.ExecuteTemplate(w, "promo.html", data)
 	})
 
-	// ============= Exemples template ==================
-
 	http.HandleFunc("/change", func(w http.ResponseWriter, r *http.Request) {
-		
-		temp.ExecuteTemplate(w, "change", nil)
+		Nombredevu++
+		Texte := ""
+		if Nombredevu%2 == 0 {
+			Texte += "pair"
+		} else {
+			Texte = "impaire"
+		}
+		Texte += fmt.Sprintf(" : %d", Nombredevu)
+		err := temp.ExecuteTemplate(w, "change.html", Texte)
+		if err != nil {
+			http.Error(w, "ERREUR TA GRANDE MAAMS", http.StatusInternalServerError)
+		}
 	})
 
 	// ============= Exemples variables ==================
