@@ -1,0 +1,32 @@
+{{define "form"}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulaire</title>
+</head>
+<body>
+<h1>Formulaire</h1>
+<form action="/user/form">
+<div class="name-field">
+        <label>Nom</label>
+        <input type="text"required><br><br>>
+   
+        <label>Prénom</label>
+        <input type="text"required><br><br>>
+  
+        <label>Date de naissance</label>
+        <input type="date"required><br><br>>
+
+        <label>Sexe</label>
+        <select id="menu-select">
+            <option value="Homme">Homme</option>
+            <option value="Femme">Femme</option>
+            <option value="Autre" selected>Autre</option>
+            </select>
+    <input type="submit" value="Valider">
+</form>
+</body>
+</html>
+{{end}}

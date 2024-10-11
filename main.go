@@ -5,9 +5,21 @@ import (
 	"html/template"
 	"net/http"
 	"os"
+	"regexp"
 )
 
 var Nombredevu int
+
+type User struct {
+	FirstName string
+	LastName  string
+	Age       int
+	Sex       string
+}
+type Promo struct {
+	Title string
+	Users []User
+}
 
 func main() {
 
@@ -15,16 +27,6 @@ func main() {
 	if err != nil {
 		fmt.Printf("ERREUR => %s", err.Error())
 		os.Exit(02)
-	}
-	type User struct {
-		FirstName string
-		LastName  string
-		Age       int
-		Sex       string
-	}
-	type Promo struct {
-		Title string
-		Users []User
 	}
 
 	http.HandleFunc("/promo", func(w http.ResponseWriter, r *http.Request) {
@@ -34,49 +36,64 @@ func main() {
 				{"Nans", " MOLL", 20, "Masculin"},
 				{"Alexis", " DUPIN", 30, "Masculin"},
 				{"Yoan", " COMMEAU", 28, "Masculin"}}}
-		temp.ExecuteTemplate(w, "promo.html", data)
+		err := temp.ExecuteTemplate(w, "promo", data)
+		if err != nil {
+			http.Error(w, "ERREUR Promo", http.StatusInternalServerError)
+		}
 	})
 
 	http.HandleFunc("/change", func(w http.ResponseWriter, r *http.Request) {
 		Nombredevu++
 		Texte := ""
 		if Nombredevu%2 == 0 {
-			Texte += "pair"
+			Texte += "Nombre de vu Pair"
 		} else {
-			Texte = "impaire"
+			Texte = "Nombre de vu Impaire"
 		}
 		Texte += fmt.Sprintf(" : %d", Nombredevu)
-		err := temp.ExecuteTemplate(w, "change.html", Texte)
+		err := temp.ExecuteTemplate(w, "change", Texte)
 		if err != nil {
-			http.Error(w, "ERREUR TA GRANDE MAAMS", http.StatusInternalServerError)
+			http.Error(w, "ERREUR Change", http.StatusInternalServerError)
 		}
 	})
 
-	// ============= Exemples variables ==================
-
 	http.HandleFunc("/user/form", func(w http.ResponseWriter, r *http.Request) {
-		// Appel du template nommé "exempleVariable" avec les données stockées dans la variable dataPage
-		temp.ExecuteTemplate(w, "form", nil)
+		err := temp.ExecuteTemplate(w, "form", nil)
+		if err != nil {
+			fmt.Println(err.Error())
+			http.Error(w, "ERREUR Formulaire", http.StatusInternalServerError)
+		}
 	})
-
-	// Déclaratrion d'une structure correspondant aux champs du template
 
 	http.HandleFunc("/user/display", func(w http.ResponseWriter, r *http.Request) {
-
-		// Appel du template nommé "exempleVariableComplexe" avec les données stockées dans la variable dataPage
-		temp.ExecuteTemplate(w, "exempleVariableComplexe", nil)
+		err := temp.ExecuteTemplate(w, "form.html", nil)
+		if err != nil {
+			http.Error(w, "ERREUR Display", http.StatusInternalServerError)
+		}
 	})
 
-	//============= Exemples conditions ================
-
-	// Déclaratrion d'une structure correspondant aux champs du template
-
 	http.HandleFunc("/user/treatment", func(w http.ResponseWriter, r *http.Request) {
-
-		// Appel du template nommé "exempleConditionSimple" avec les données stockées dans la variable dataPage
-		temp.ExecuteTemplate(w, "exempleConditionSimple", nil)
+		err := temp.ExecuteTemplate(w, "treatment.html", nil)
+		if err != nil {
+			http.Error(w, "ERREUR Treatment", http.StatusInternalServerError)
+		}
 	})
 
 	http.ListenAndServe("localhost:8080", nil)
 
+}
+
+func Erreur(Nom, Prenom string) bool {
+	NomPrenomRegex := `^[A-Za-zÀ-ÿ][a-zà-ÿ]+([-'\s][A-Za-zÀ-ÿ][a-zà-ÿ]+)?$`
+
+	regex := regexp.MustCompile(NomPrenomRegex)
+
+	if !(regex.MatchString(Nom)) {
+		return false
+	}
+	if !(regex.MatchString(Prenom)) {
+		return false
+	}
+
+	return true
 }
