@@ -1,15 +1,18 @@
+{{define "display"}}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Affichages utilisateur</title>
+    <title>Affichages informations utilisateur</title>
 </head>
 <body>
-    <h1>Informations personnelles</h1>
-    <p><strong>Nom:</strong> {{ .Nom }}</p>
-    <p><strong>Prénom:</strong> {{ .Prenom }}</p>
-    <p><strong>Date de naissance:</strong> {{ .DateNaissance }}</p>
-    <p><strong>Sexe:</strong> {{ .Sexe }}</p>
+    <h1>Informations de l'utilisateur</h1>
+    <p><strong>Nom {{.LastName}}</p>
+    <p><strong>Prénom:</strong> {{.FirstName}}</p>
+    <p><strong>Date de naissance:</strong> {{.dateNaissance}}</p>
+    <p><strong>Sexe:</strong> {{.Sex}}</p>
+    <a href="/user/form">Retour au formulaire</a>
 </body>
 </html>
+{{end}}

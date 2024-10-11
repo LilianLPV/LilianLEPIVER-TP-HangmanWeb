@@ -8,6 +8,21 @@ import (
 	"regexp"
 )
 
+func Erreur(Nom, Prenom string) bool {
+	NomPrenomRegex := `^[A-Za-zÀ-ÿ][a-zà-ÿ]+([-'\s][A-Za-zÀ-ÿ][a-zà-ÿ]+)?$`
+
+	regex := regexp.MustCompile(NomPrenomRegex)
+
+	if !(regex.MatchString(Nom)) {
+		return false
+	}
+	if !(regex.MatchString(Prenom)) {
+		return false
+	}
+
+	return true
+}
+
 var Nombredevu int
 
 type User struct {
@@ -66,34 +81,26 @@ func main() {
 	})
 
 	http.HandleFunc("/user/display", func(w http.ResponseWriter, r *http.Request) {
-		err := temp.ExecuteTemplate(w, "form.html", nil)
+
+		err := temp.ExecuteTemplate(w, "display", nil)
 		if err != nil {
 			http.Error(w, "ERREUR Display", http.StatusInternalServerError)
 		}
 	})
 
 	http.HandleFunc("/user/treatment", func(w http.ResponseWriter, r *http.Request) {
-		err := temp.ExecuteTemplate(w, "treatment.html", nil)
+		err := temp.ExecuteTemplate(w, "display", nil)
 		if err != nil {
-			http.Error(w, "ERREUR Treatment", http.StatusInternalServerError)
+			http.Error(w, "ERREUR Display", http.StatusInternalServerError)
 		}
 	})
 
+	http.HandleFunc("/user/error", func(w http.ResponseWriter, r *http.Request) {
+		err := temp.ExecuteTemplate(w, "error", nil)
+		if err != nil {
+			http.Error(w, "ERREUR ERREUR", http.StatusInternalServerError)
+		}
+	})
 	http.ListenAndServe("localhost:8080", nil)
 
-}
-
-func Erreur(Nom, Prenom string) bool {
-	NomPrenomRegex := `^[A-Za-zÀ-ÿ][a-zà-ÿ]+([-'\s][A-Za-zÀ-ÿ][a-zà-ÿ]+)?$`
-
-	regex := regexp.MustCompile(NomPrenomRegex)
-
-	if !(regex.MatchString(Nom)) {
-		return false
-	}
-	if !(regex.MatchString(Prenom)) {
-		return false
-	}
-
-	return true
 }
